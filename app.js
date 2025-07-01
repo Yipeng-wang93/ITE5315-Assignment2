@@ -57,7 +57,7 @@ app.get('/', function(req, res) {
 
 // data route
 app.get('/data', (req, res) => {
-  const filePath = path.join(__dirname, 'movie-dataset-a2/movie-dataset-a2.json');
+  const filePath = path.join(__dirname, 'public/movie-dataset-a2/movie-dataset-a2.json');
   fs.readFile(filePath, 'utf-8', (err, data) => {
     if (err) {
       console.error("Reading JSON file wrong!", err);
@@ -76,7 +76,7 @@ app.get('/users', function(req, res) {
 // 
 app.get('/data/movie/:index', (req, res) => {
   const index_no = parseInt(req.params.index);
-  const filePath = path.join(__dirname, 'movie-dataset-a2/movie-dataset-a2.json');
+  const filePath = path.join(__dirname, 'public/movie-dataset-a2/movie-dataset-a2.json');
   fs.readFile(filePath, 'utf-8', (err, data) => {
     if (err) {
       return res.status(500).render('error', { layout: 'main', title: 'Error', message: 'File load error' });
@@ -98,7 +98,7 @@ app.get('/data/search/id', (req, res) => {
 // search by id(post handler)
 app.post('/data/search/id', (req, res) => {
   const input = parseInt(req.body.MovieID);
-  const filePath = path.join(__dirname, 'movie-dataset-a2/movie-dataset-a2.json');
+  const filePath = path.join(__dirname, 'public/movie-dataset-a2/movie-dataset-a2.json');
   fs.readFile(filePath, 'utf-8', (err, data) => {
     if (err) return res.status(500).render('error', { layout: 'main', title: 'Error', message: 'Data load failed' });
     const movies = JSON.parse(data);
@@ -119,7 +119,7 @@ app.get('/data/search/title', (req, res) => {
 //search by title(post handler)
 app.post('/data/search/title', (req, res) => {
   const inputTitle = req.body.MovieTitle.trim().toLowerCase();
-  const filePath = path.join(__dirname, 'movie-dataset-a2/movie-dataset-a2.json');
+  const filePath = path.join(__dirname, 'public/movie-dataset-a2/movie-dataset-a2.json');
   fs.readFile(filePath, 'utf-8', (err, data) => {
     if (err) return res.status(500).render('error', { layout: 'main', title: 'Error', message: 'Data load failed' });
     const movies =  JSON.parse(data);
@@ -150,7 +150,7 @@ app.post('/data/search/title', (req, res) => {
 
 // Add a new route /allData or /filteredData  to display specific movies in an HTML table
 app.get('/filteredData', (req, res) => {
-  const filePath = path.join(__dirname, 'movie-dataset-a2/movie-dataset-a2.json');
+  const filePath = path.join(__dirname, 'public/movie-dataset-a2/movie-dataset-a2.json');
 
   fs.readFile(filePath, 'utf-8', (err, data) => {
     if (err) {
@@ -204,6 +204,13 @@ app.use(function(req, res) {
 });
 
 // start server
-app.listen(PORT, () => {
+module.exports = app;
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server is running at http://${HOST}:${PORT}`);
+  });
+}
+
+/* app.listen(PORT, () => {
   console.log(`Example app listening at http://${HOST}:${PORT}`)
-})
+}) */
