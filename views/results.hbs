@@ -1,0 +1,35 @@
+<div class="content">
+  {{> welcome}}
+  <h1>Search Results</h1>
+
+  {{#if movies.length}}
+    <ul>
+      {{#each movies}}
+        <li>
+          <strong>Title:</strong> {{Title}}<br>
+          <strong>ID:</strong> {{Movie_ID}}<br>
+          <strong>Genre:</strong> {{Genre}}<br>
+          <strong>Year:</strong> {{Year}}<br>
+          <strong>Director:</strong> {{Director}}<br>
+
+          {{#if (hasActors Actors)}}
+            <strong>Actors:</strong>
+            <ul>
+              {{#each Actors}}
+                <li>{{this}}</li>
+              {{/each}}
+            </ul>
+          {{else}}
+            <em>No actors listed.</em>
+          {{/if}}
+
+          <br><br>
+        </li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>No movies found.</p>
+  {{/if}}
+
+  
+</div>

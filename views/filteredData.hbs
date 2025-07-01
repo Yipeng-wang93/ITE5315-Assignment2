@@ -1,0 +1,20 @@
+<div class="content">
+  {{> welcome}}
+  <h1>Filtered movie data which metascore not blank</h1>
+  <table border="1" cellpadding="5">
+    {{> theader}}
+
+    {{#each movies}}
+      {{#if (hasMetascore this.Metascore)}}
+        <tr {{#if (isNAMetascore Metascore)}}style="background-color: red;"{{/if}}>
+          <td>{{uppercase Title}}</td>
+          <td>{{Genre}}</td>
+          <td>{{Year}}</td>
+          <td>{{Director}}</td>
+          <td>{{Metascore}}</td>
+        </tr>
+      {{/if}}
+    {{/each}}
+
+  </table>
+</div>
