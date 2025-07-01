@@ -18,6 +18,7 @@ const exphbs = require('express-handlebars');
 // set up Handlebars with .hbs file extension. and custom helpers
 const hbs = exphbs.create({ 
   extname: '.hbs',
+  defaultLayout: 'main',
   // if the default directory is partials, we don't have to specify the directory name
   // but if there are more than one partials directories, or not the default partial name(partials)
   // we have to specify the partial directory
@@ -43,7 +44,7 @@ const hbs = exphbs.create({
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 // register Handlebars engine with '.hbs' extension
-app.engine('.hbs', hbs.engine);
+app.engine('hbs', hbs.engine);
 // Set Handlebars as the view engine
 app.set('view engine', 'hbs');
 
