@@ -1,20 +1,15 @@
 {
   "version": 2,
-  "functions": {
-    "server.js": {
-      "runtime": "@vercel/node",
-      "includeFiles": [
-        "views/**",
-        "public/**"
-      ]
-    }
-  },
+  "builds": [
+    { "src": "api/server.js", "use": "@vercel/node" }
+  ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/server.js"
-    }
+    { "src": "/(.*)", "dest": "api/server.js" }
   ]
 }
+
+
+
+
 
 
