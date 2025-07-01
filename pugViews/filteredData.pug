@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    title= title
+    style.
+      table {
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th, td {
+        padding: 5px;
+        border: 1px solid #ccc;
+      }
+  body
+    h1 Filtered movie data which metascore not blank by using pug
+
+    table
+      thead
+        tr
+          th Title
+          th Genre
+          th Year
+          th Director
+          th Metascore
+      tbody
+        each movie in movies
+          if movie.Metascore && movie.Metascore.trim() !== ''
+            - const isNA = movie.Metascore.trim().toLowerCase() === 'n/a'
+            tr(style=isNA ? 'background-color: red;' : '')
+              td #{movie.Title.toUpperCase()}
+              td #{movie.Genre}
+              td #{movie.Year}
+              td #{movie.Director}
+              td #{movie.Metascore}

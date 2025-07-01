@@ -1,3 +1,37 @@
+/******************************************************************************
+***
+*
+ITE5315 – Assignment 2
+*
+I declare that this assignment is my own work in accordance with Humber Academic Policy.
+*
+No part of this assignment has been copied manually or electronically from any other source
+*
+(including web sites) or distributed to other students.
+*
+*
+Name: Yipeng Wang Student ID: Date: N01625427
+*
+*
+******************************************************************************
+**/
+
+/*
+D1) On a sacle from 1 to 5, how much did you use generative AI to complete this assignment:
+
+The answer is 2. To be honest, I used AI to help me to answer my issues that I faced, not do the assigenment.
+I used it very minimally, but most of the materials are in-class examples that you shown us.
+
+D2) On a scale from 1 to 5, how confident are you in your understanding of the generative AI support you
+utilized in this assignment, and your ability to explain it if questioned?
+
+The answer is 4. I can usually understand and explain AI's answers right after asking a
+question, and for a while afterward. However, as the prof once said, practice and repetition
+are important to make knowledge stick. So, after some time, I may not be able to explain everything
+100% clearly. Also, my speaking skills are still a bit limited, which may affect how well I can express
+the answer.
+*/
+
 // import Express framework
 var express = require('express');
 // Node.js module for file paths
@@ -48,6 +82,12 @@ app.use(express.urlencoded({ extended: true }));
 app.engine('hbs', hbs.engine);
 // Set Handlebars as the view engine
 app.set('view engine', 'hbs');
+
+// This line explicitly tells Express where to look for template (view) files
+// It means: “Use the views folder located in the same directory as app.js as the base directory 
+// for all .hbs (Handlebars), or other templating engine files.”
+// If I don't set it manually, Express tries to find the views directory by default,
+// but in many cases (especially in Vercel or subfolder structure), the default path fails.
 app.set('views', path.join(__dirname, 'views'));
 
 // route for the homepage (renders index.hbs)
@@ -192,6 +232,56 @@ app.get('/filteredData', (req, res) => {
     });
   });
 });
+
+app.get('/filteredDataPug', (req, res) => {
+  const filePath = path.join(__dirname, 'movie-dataset-a2/movie-dataset-a2.json');
+  // when user visit /filteredDataPug, express will use pug for res.render(). set pug as the default
+  // template engine for my express app.
+  // Whenever I call res.render('viewName'), Express will assume I am referring to a .pug file.
+  app.set('view engine', 'pug');
+  // set the directory where express should look for .pug template files
+  // By default, Express uses the /views directory, but here I override it to use 
+  // the pugViews directory instead.
+  app.set('views', path.join(__dirname, 'pugViews'));
+
+  fs.readFile(filePath, 'utf-8', (err, data) => {
+    if (err) {
+      return res.status(500).render('error', {
+        layout: false,
+        title: 'Error',
+        message: 'Failed to load movie data'
+      });
+    }
+
+    let movies = JSON.parse(data);
+    movies = movies.map(m => ({
+      Movie_ID: m.Movie_ID,
+      Title: m.Title,
+      Genre: m.Genre,
+      Year: m.Year,
+      Director: m.Director,
+      Metascore: m.Metascore,
+      Actors: Array.isArray(m.Actors)
+        ? m.Actors
+        : (typeof m.Actors === 'string' && m.Actors.trim().length > 0
+            ? m.Actors.split(',').map(actor => actor.trim())
+            : [])
+    }));
+
+    res.render('filteredData', { 
+      layout: false,             // pug doesn't use layout of handlebars
+      title: 'Filtered movie data (Pug)',
+      movies
+    });
+
+    // after render by pug, switch back to handlebars render
+    app.set('view engine', 'hbs');
+    app.set('views', path.join(__dirname, 'views'));
+    
+  });
+});
+
+
 
 /* app.get('*', function(req, res) {
   res.render('error', { title: 'Error', message:'Wrong Route', layout: 'main' });
