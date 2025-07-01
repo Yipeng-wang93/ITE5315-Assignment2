@@ -205,11 +205,6 @@ app.use(function(req, res) {
 
 // start server
 module.exports = app;
-if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`Server is running at http://${HOST}:${PORT}`);
-  });
-}
 
 /* app.listen(PORT, () => {
   console.log(`Example app listening at http://${HOST}:${PORT}`)
