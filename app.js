@@ -4,6 +4,7 @@ var express = require('express');
 var path = require('path');
 // create an Express app object
 var app = express();
+
 const fs = require('fs');
 // load all of key-value pairs in .env, then add them to the Node.js global object process.env
 // dotenv read .env, then inject the content of .env into process.env
@@ -47,6 +48,7 @@ app.use(express.urlencoded({ extended: true }));
 app.engine('hbs', hbs.engine);
 // Set Handlebars as the view engine
 app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
 
 // route for the homepage (renders index.hbs)
 app.get('/', function(req, res) {
