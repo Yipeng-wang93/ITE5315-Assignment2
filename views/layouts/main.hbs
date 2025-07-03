@@ -1,3 +1,7 @@
+<!-- main.hbs is the default layout handlebars template file to render consistence html structure 
+such as <html>, <head>, <body> across all pages. It defines a layout with a {{{body}}} placeholder 
+that gets replaced by the content of specific views like index.hbs or error.hbs. In the app.js, 
+it is used by passing layout: ‘main’ in the res.render(…). -->
 <!DOCTYPE html>
 <html lang="en">
   <head>

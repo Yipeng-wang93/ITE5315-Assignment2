@@ -10,7 +10,7 @@ No part of this assignment has been copied manually or electronically from any o
 (including web sites) or distributed to other students.
 *
 *
-Name: Yipeng Wang Student ID: Date: N01625427
+Name: Yipeng Wang Student ID: N01625427 Date: 6.30
 *
 *
 ******************************************************************************
@@ -31,6 +31,13 @@ are important to make knowledge stick. So, after some time, I may not be able to
 100% clearly. Also, my speaking skills are still a bit limited, which may affect how well I can express
 the answer.
 */
+
+// In general, the workflow of handlebars template engine is:
+// Client(browser) send the request, then express middleware process the request, 
+// then reach out controller(call back function, such as (req,res)=>{…}), 
+// then the controller call res.render(hbs path, data), then handlebars template engine will 
+// render hbs path(such as filteredData.hbs) and data as HTML, 
+// then express will send the response to the client by using res.send().
 
 // import Express framework
 var express = require('express');
@@ -59,15 +66,20 @@ const hbs = exphbs.create({
   // we have to specify the partial directory
   partialsDir: path.join(__dirname, 'views/partials'),
   helpers: {
+    // convert a string to uppercase
     uppercase: function (str) {
       return str.toUpperCase();
     },
+    // check if the given actors field is a non-empty array, prevent rendering empty actor lists in the template
     hasActors: function (actors) {
       return Array.isArray(actors) && actors.length > 0;
     },
+    // check if the given metascore is present and not blank, used to filter out entries with missing metascore.
     hasMetascore: function (metascore) {
       return metascore !== undefined && metascore !== null && metascore.toString().trim() !== '';
     },
+    // check if the metascore is either null/empty or explicitly marked as 'N/A'.
+    // used to highlight or style rows with invalid or missing metascore. (step 9)
     isNAMetascore: function (metascore) {
       return !metascore || metascore.trim().toLowerCase() === 'n/a';
     }
@@ -76,6 +88,10 @@ const hbs = exphbs.create({
 });
 
 // serve static files (stylesheets, images) from the 'public' folder
+// This line tells express to serve static files 
+// (images, css) from the public directory. It’s a built-in middleware. For instance, 
+// the stylesheet style.css in main.hbs will only load if this middleware is active. 
+// If I comment it out, images and css files will not be used, and layout will be broken on the web.
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 // register Handlebars engine with '.hbs' extension
@@ -192,7 +208,7 @@ app.post('/data/search/title', (req, res) => {
 });
 
 // Add a new route /allData or /filteredData  to display specific movies in an HTML table
-app.get('/filteredData', (req, res) => {
+app.get('/allData', (req, res) => {
   const filePath = path.join(__dirname, 'movie-dataset-a2/movie-dataset-a2.json');
 
   fs.readFile(filePath, 'utf-8', (err, data) => {
@@ -208,7 +224,7 @@ app.get('/filteredData', (req, res) => {
 
     // Ensure Actors field is an array for each movie
     // if m.Actors is already an array, then remain it.
-    // if it is a string, the split it
+    // if it is a string, then split it
     // if it is null, then initialize array to an empty array to make sure template will not broken
     movies = movies.map(m => ({
       Movie_ID: m.Movie_ID,
@@ -225,9 +241,10 @@ app.get('/filteredData', (req, res) => {
             : [])
     }));
 
-    res.render('filteredData', {
+    res.render('allData', {
       layout: 'main',
-      title: 'Filtered movie data',
+      title: 'All movie data',
+      //title: 'Filtered movie data',
       movies
     });
   });
@@ -298,6 +315,9 @@ app.use(function(req, res) {
 
 // start server
 module.exports = app;
+// in node.js, every file is treated as a separate module.
+// By using module.exports = app;, I am exporting the xxpress app object from my current file(app.js)
+// , so that other files (such as server.js) can import and use it.
 
 /* app.listen(PORT, () => {
   console.log(`Example app listening at http://${HOST}:${PORT}`)
